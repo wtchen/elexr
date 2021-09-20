@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Depends
 from voting import apportionment
-from ..types import election, message
+from ..types import elections, messages
 from ..security import oauth2_scheme
 
 router = APIRouter(
@@ -10,8 +10,8 @@ router = APIRouter(
 )
 
 
-@router.post("/method/{method_name}", responses={405: {"model": message.Message}})
-def election(method_name: str, election_info: election.ElectionInfo, token: str = Depends(oauth2_scheme)):
+@router.post("/method/{method_name}", responses={405: {"model": messages.Message}})
+def election(method_name: str, election_info: elections.ElectionInfo, token: str = Depends(oauth2_scheme)):
     valid_methods = {"dhondt": apportionment.dhondt, "sainte_lague": apportionment.sainte_lague}
     if method_name not in valid_methods:
         raise HTTPException(status_code=405, detail={"message": "Invalid apportionment method"})
